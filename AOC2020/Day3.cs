@@ -5,7 +5,7 @@ using System.Text;
 
 namespace AOC2020
 {
-    public class Day3
+    public class Day3 : Base
     {
         string inputTxt = System.IO.File.ReadAllText(@"../../../Inputs/Input3.txt");
         List<string> input = new List<string>();
@@ -14,13 +14,25 @@ namespace AOC2020
         {
             input = inputTxt.Split(new[] { Environment.NewLine },
                 StringSplitOptions.None).ToList();
+        }
 
-            var trees = CountTrees(1,1) * CountTrees(3, 1) * CountTrees(5, 1) * CountTrees(7, 1) * CountTrees(1, 2);
+        public override void Part1()
+        {
+            Console.WriteLine(CountTrees(3, 1));
+        }
+
+        public override void Part2()
+        {
+            long trees = CountTrees(1, 1);
+            trees *= CountTrees(3, 1);
+            trees *= CountTrees(5, 1);
+            trees *= CountTrees(7, 1);
+            trees *= CountTrees(1, 2);
 
             Console.WriteLine(trees);
         }
 
-        public int CountTrees(int x, int y)
+        private int CountTrees(int x, int y)
         {
             var trees = 0;
             var right = 0;
