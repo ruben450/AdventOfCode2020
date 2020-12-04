@@ -6,7 +6,7 @@ namespace AOC2020
     {
         static void Main(string[] args)
         {
-            Day3 d= new Day3();
+            Day4 d= new Day4();
             d.HandleSelect();
         }
     }
