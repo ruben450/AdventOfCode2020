@@ -26,15 +26,15 @@ namespace AOC2020
                 {
                     if (contains.EndsWith("."))
                     {
-                        bagsDetails[bag].Add(contains.Remove(contains.Length - 1));
+                        bagsDetails[bag].Add(BagWithS(contains.Remove(contains.Length - 1)));
                     }
                     else if (contains.StartsWith(" "))
                     {
-                        bagsDetails[bag].Add(contains.Substring(1, contains.Length - 1));
+                        bagsDetails[bag].Add(BagWithS(contains.Substring(1, contains.Length - 1)));
                     }
                     else
                     {
-                        bagsDetails[bag].Add(contains);
+                        bagsDetails[bag].Add(BagWithS(contains));
                     }
                 }
             }
@@ -47,7 +47,6 @@ namespace AOC2020
                 if (bagsDetail.Value.Any(x => x.Contains("shiny gold")))
                 {
                     toLook.Add(bagsDetail.Key);
-                    //amount++;
                 }
             }
 
@@ -55,7 +54,6 @@ namespace AOC2020
             {
                 amount += RecursiveSearch();
             }
-
             Console.WriteLine(amount);
         }
 
@@ -71,14 +69,17 @@ namespace AOC2020
             var toRemove = new List<string>();
             for (int i = 0; i < toLookCount; i++)
             {
-                var toAdd = bagsDetails.Where(x => x.Value.Any(y => y.Contains(toLook[i]))).Select(x => x.Key).ToList();
+                var toAdd = bagsDetails.Where(x => x.Value.Any(y => y.EndsWith(toLook[i]))).Select(x => x.Key).ToList();
                 foreach (var add in toAdd)
                 {
-                    if (!toLook.Contains(add))
+                    if (!toLook.Contains(add) && bagsDetails.Where(x => x.Value.Any(y => y.EndsWith(add))).ToList().Count > 0)
                         toLook.Add(add);
+                    else if (bagsDetails.Where(x => x.Value.Any(y => y.EndsWith(add))).ToList().Count == 0)
+                        amount++;
                 }
                 toRemove.Add(toLook[i]);
-                amount++;
+                if (toAdd.Count == 0)
+                    amount++;
             }
 
             foreach (var remove in toRemove)
@@ -87,6 +88,13 @@ namespace AOC2020
             }
 
             return amount;
+        }
+
+        private string BagWithS(string bag)
+        {
+            if (bag.EndsWith("s"))
+                return bag;
+            return bag + "s";
         }
     }
 }
