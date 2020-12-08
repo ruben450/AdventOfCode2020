@@ -11,6 +11,7 @@ namespace AOC2020
         List<string> input = new List<string>();
         Dictionary<string, List<string>> bagsDetails = new Dictionary<string, List<string>>();
         List<string> toLook = new List<string>();
+        List<string> toLookHistory = new List<string>();
         public Day7()
         {
             input = inputTxt.Split(new[] { Environment.NewLine },
@@ -47,10 +48,11 @@ namespace AOC2020
                 if (bagsDetail.Value.Any(x => x.Contains("shiny gold")))
                 {
                     toLook.Add(bagsDetail.Key);
+                    //amount++;
                 }
             }
 
-            while (toLook.Count > 0)
+            while (toLook.Count > 1)
             {
                 amount += RecursiveSearch();
             }
@@ -67,19 +69,20 @@ namespace AOC2020
             var amount = 0;
             var toLookCount = toLook.Count;
             var toRemove = new List<string>();
+
             for (int i = 0; i < toLookCount; i++)
             {
                 var toAdd = bagsDetails.Where(x => x.Value.Any(y => y.EndsWith(toLook[i]))).Select(x => x.Key).ToList();
+                amount++;
                 foreach (var add in toAdd)
                 {
-                    if (!toLook.Contains(add) && bagsDetails.Where(x => x.Value.Any(y => y.EndsWith(add))).ToList().Count > 0)
+                    if (!toLook.Contains(add) && bagsDetails.Where(x => x.Value.Any(y => y.EndsWith(add))).ToList().Count > 0 && !toLookHistory.Contains(add))
                         toLook.Add(add);
-                    else if (bagsDetails.Where(x => x.Value.Any(y => y.EndsWith(add))).ToList().Count == 0)
+                    else if (bagsDetails.Where(x => x.Value.Any(y => y.EndsWith(add))).ToList().Count == 0 && !toLookHistory.Contains(add))
                         amount++;
+                    toLookHistory.Add(add);
                 }
                 toRemove.Add(toLook[i]);
-                if (toAdd.Count == 0)
-                    amount++;
             }
 
             foreach (var remove in toRemove)
