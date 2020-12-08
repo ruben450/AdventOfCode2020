@@ -8,6 +8,7 @@ namespace AOC2020
     {
         string inputTxt = System.IO.File.ReadAllText(@"../../../Inputs/Input8.txt");
         List<string> input = new List<string>();
+        List<string> inputMemory = new List<string>();
         public Day8()
         {
             input = inputTxt.Split(new[] { Environment.NewLine },
@@ -50,26 +51,75 @@ namespace AOC2020
 
         public override void Part2()
         {
-            int acc = 0;
-            int index = 0;
+            var result = 0;
+            inputMemory = new List<string>(input);
             for (int i = 0; i < input.Count; i++)
             {
-                if (input[index].StartsWith("done"))
+                result = Operate();
+                inputMemory = new List<string>(input);
+                if (result == 0)
+                {
+                    var toCheck = inputMemory[i].Split(" ")[0];
+                    if (toCheck == "nop")
+                    {
+                        inputMemory[i] = "jmp " + inputMemory[i].Split(" ")[1];
+                    }
+                    else if (toCheck == "jmp")
+                    {
+                        inputMemory[i] = "nop " + inputMemory[i].Split(" ")[1];
+                    }
+                }
+                else
                 {
                     break;
                 }
-                var action = input[index].Split(" ")[0];
-                var amount = int.Parse(input[index].Split(" ")[1]);
+            }
 
+            Console.WriteLine(result);
+        }
+
+        private int Operate()
+        {
+            int acc = 0;
+            int index = 0;
+            Console.WriteLine("Operate called");
+            for (int i = 0; i < input.Count; i++)
+            {
+                if (index >= input.Count)
+                    break;
+                var action = inputMemory[index].Split(" ")[0];
+                var amount = int.Parse(inputMemory[index].Split(" ")[1]);
+
+                if (index == input.Count -1)
+                {
+                    switch (action)
+                    {
+                        case "acc":
+                            acc += amount;
+                            //input[index] = "done" + input[index];
+                            index++;
+                            break;
+                        case "jmp":
+                            //input[index] = "done" + input[index];
+                            index += amount;
+                            break;
+                        case "nop":
+                            index++;
+                            break;
+                        default:
+                            break;
+                    }
+                    return acc;
+                }
                 switch (action)
                 {
                     case "acc":
                         acc += amount;
-                        input[index] = "done";
+                        //input[index] = "done" + input[index];
                         index++;
                         break;
                     case "jmp":
-                        input[index] = "done";
+                        //input[index] = "done" + input[index];
                         index += amount;
                         break;
                     case "nop":
@@ -79,7 +129,8 @@ namespace AOC2020
                         break;
                 }
             }
-            Console.WriteLine(acc);
+
+            return 0;
         }
     }
 }
