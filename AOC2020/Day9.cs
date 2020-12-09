@@ -15,14 +15,13 @@ namespace AOC2020
         public Day9()
         {
             input = inputTxt.Split('\n').Select(long.Parse).ToList();
-        }
-        public override void Part1()
-        {
             for (int i = 0; i < input.Count - 25; i++)
             {
                 trySum.Add(Guid.NewGuid().ToString() + input[i + 25].ToString(), new KeyValuePair<List<long>, bool>(input.Skip(i).Take(25).ToList(), false));
             }
-
+        }
+        public override void Part1()
+        {
             // Create a TaskFactory and pass it our custom scheduler.
             List<Task> tasks = new List<Task>();
             TaskFactory factory = new TaskFactory();
@@ -47,7 +46,27 @@ namespace AOC2020
 
         public override void Part2()
         {
-            throw new NotImplementedException();
+            long answerPart1 = 177777905;
+
+            var index = 2;
+            var skip = 0;
+            var loop = true;
+            while (loop)
+            {
+                var values = input.Skip(skip).Take(index).ToList();
+                var result = FindSetMakesSum(values);
+                index++;
+                if (result > answerPart1)
+                {
+                    skip++;
+                    index = 2;
+                }
+                if (result == answerPart1)
+                {
+                    loop = false;
+                    Console.WriteLine(values.Min() + values.Max());
+                }
+            } 
         }
 
         private bool TryEverySum(long total, List<long> values)
@@ -68,6 +87,17 @@ namespace AOC2020
                 return false;
             return true;
         }
+
+        private long FindSetMakesSum(List<long> values)
+        {
+            long sum = 0;
+            for (int i = 0; i < values.Count; i++)
+            {
+                sum += values[i];
+            }
+            return sum;
+        }
+
         private void ThreadFunc(string total, List<long> values) 
         {
             var loop = true;
