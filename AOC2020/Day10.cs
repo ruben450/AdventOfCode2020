@@ -42,7 +42,48 @@ namespace AOC2020
 
         public override void Part2()
         {
-            throw new NotImplementedException();
+            var outlet = 0;
+            var sequences = 0;
+            input.Sort();
+            var inputTemp = new List<int>(input);
+
+            for (int i = 0; i < input.Count - 1; i++)
+            {
+                if (input[i + 1] - input[i] == 1)
+                {
+                    sequences++;
+                }
+            }
+
+            Console.WriteLine(sequences);
+
+        }
+
+        private void RemoveNext1Jolt(int startIndex)
+        {
+            var inputTemp = new List<int>(input);
+            inputTemp.RemoveRange(0, startIndex);
+            for (int i = 0; i < inputTemp.Count - 1; i++)
+            {
+                if (inputTemp[i] - inputTemp[i + 1] == 1)
+                {
+                    input.Remove(inputTemp[i]);
+                    break;
+                }
+            }
+        }
+
+        private int Calc(List<int> values)
+        {
+            for (int i = 0; i < input.Count - 1; i++)
+            {
+                if (values[i] - values[i + 1] == 1)
+                {
+                    return i;
+                }
+            }
+
+            return 0;
         }
     }
 }
